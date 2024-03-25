@@ -1,1 +1,2 @@
 text update is checking if any change happen in local git push origin main works or not
+change with commit only?
