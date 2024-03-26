@@ -20,7 +20,7 @@ model User {
   password      String
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
-  role          RoleType
+  role          RoleType @default(FREELANCER)
   balance       Decimal
   language_known String
   nationality   String
@@ -33,8 +33,8 @@ model User {
   chatrooms     Chatroom[] @relation("chatroomUser")
   payslipSender             Payslip[]   @relation("PayslipSender")
   payslipReceiver           Payslip[]   @relation("PayslipReceiver")
-  sentTransactions          Transaction[]      @relation("SentTransactions")
-  receivedTransactions      Transaction[]  @relation("ReceivedTransactions")
+  //sentTransactions          Transaction[]      @relation("SentTransactions")
+  //receivedTransactions      Transaction[]  @relation("ReceivedTransactions")
   sentMessages                  Message[]      @relation("SentMessagesToUser")
   recievedMessages              Message[]  @relation("ReceivedMessagesFromUser")
   filesFromUsers              File[] @relation("FileSentUser")
@@ -43,30 +43,30 @@ model User {
 
 model FreelancerProfile {
   id               Int      @id @default(autoincrement())
-  review           String
-  ratings          Int
-  hourly_rate      Decimal
-  completed_jobs   Int
-  created_services Int
-  active_jobs      Int
+  review           String?
+  ratings          Int?
+  hourly_rate      Decimal?
+  completed_jobs   Int?
+  created_services Int?
+  active_jobs      Int?
   userId          Int @unique
-  user            User     @relation(fields: [userId], references: [id])
+  user            User?     @relation(fields: [userId], references: [id])
   Freelancerskills Skill[]
-  services        Service[]
-  job Job?
+  //services        Service[]
+  //job Job?
   bid Bid[]
 }
 
 model ClientProfile {
   id            Int      @id @default(autoincrement())
-  review        String
-  ratings       Int
-  avg_budget    Decimal
-  created_jobs  Int
+  review        String?
+  ratings       Int?
+  avg_budget    Decimal?
+  created_jobs  Int?
   userId          Int @unique
-  user          User     @relation(fields: [userId], references: [id])
+  user          User?     @relation(fields: [userId], references: [id])
   Requiredskills Skill[]
-  job Job?
+ // job Job?
 }
 
 model Skill {
@@ -133,25 +133,25 @@ model Service {
   standard_offer     Decimal
   premium_offer      Decimal
   butter_offer       Decimal
-  freelancer_profile_id Int
-  FreelancerProfile FreelancerProfile @relation(fields: [freelancer_profile_id], references: [id])
+  freelancer_profile_id Int?
+  // FreelancerProfile FreelancerProfile @relation(fields: [freelancer_profile_id], references: [id])
   file File[]
 }
 
 model Job {
   id                   Int      @id @default(autoincrement())
-  title                String
-  description          String
-  budget               Decimal
-  deadline             DateTime
-  is_payment_verified Boolean
-  is_job_completed    Boolean
+  title                String?
+  description          String?
+  budget               Decimal?
+  deadline             DateTime?
+  is_payment_verified Boolean?
+  is_job_completed    Boolean?
   created_at           DateTime @default(now())
   updated_at           DateTime @updatedAt
-  ClientProfile       ClientProfile   @relation(fields: [client_profile_id], references: [id])
-  FreelancerProfile   FreelancerProfile @relation(fields: [freelancer_profile_id], references: [id])
-  client_profile_id    Int @unique
-  freelancer_profile_id Int  @unique
+  // ClientProfile       ClientProfile   @relation(fields: [client_profile_id], references: [id])
+  // FreelancerProfile   FreelancerProfile @relation(fields: [freelancer_profile_id], references: [id])
+  client_profile_id    Int?
+  freelancer_profile_id Int?
   payslip             Payslip?
 }
 
@@ -176,10 +176,11 @@ model Transaction {
   createdAt      DateTime @default(now())
 
   // relationship with User for sender and receiver
-  sender         User     @relation("SentTransactions", fields: [senderId], references: [id])
-  senderId       Int
-  receiver       User     @relation("ReceivedTransactions", fields: [receiverId], references: [id])
-  receiverId     Int
+  //sender         User     @relation("SentTransactions", fields: [senderId], references: [id])
+  senderId       Int? 
+  //receiver       User     @relation("ReceivedTransactions", fields: [receiverId], references: [id])
+  receiverId     Int? 
+  timestamp      DateTime @default(now())
 }
 
 // Payslip table to store payment details for each job

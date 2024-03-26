@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMessageDto } from './dto/create-message.dto';
+import { Message } from '@prisma/client'; 
 
 @Injectable()
 export class MessageService {
@@ -28,6 +29,24 @@ export class MessageService {
         recipientId,
         senderName: sender.username as string,
         recipientName: recipient.username as string,
+      },
+    });
+  }
+
+  // Method to fetch all messages sent by a specific sender
+  async getMessagesBySenderId(senderId: number): Promise<Message[]> {
+    return this.prisma.message.findMany({
+      where: {
+        senderId: senderId,
+      },
+    });
+  }
+
+  // Method to fetch all messages received by a specific recipient
+  async getMessagesByRecipientId(recipientId: number): Promise<Message[]> {
+    return this.prisma.message.findMany({
+      where: {
+        recipientId: recipientId,
       },
     });
   }

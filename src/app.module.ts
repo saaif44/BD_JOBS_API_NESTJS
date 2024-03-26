@@ -14,14 +14,20 @@ import { FileController } from './file/file.controller';
 import { FileUploadService } from './file/file-upload.service';
 import { LoggingMiddleware } from './middleware/logging.middleware';
 import { MulterModule } from '@nestjs/platform-express';
+import { TransactionService } from './transaction/transaction.service';
+import { TransactionController } from './transaction/transaction.controller';
+import { TransactionModule } from './transaction/transaction.module';
+import { DashboardController } from './dashboard/dashboard.controller';
+import { DashboardService } from './dashboard/dashboard.service';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [ FileModule, AuthModule, PrismaModule, UsersModule, ProfileModule, JwtModule.register({
     secret: process.env.JWT_SECRET || 'jwt-secret',
     signOptions: { expiresIn: '1d' },
-  }), MessageModule, MulterModule.register(multerConfig), ],
-  controllers: [AppController, FileController ],
-  providers: [AppService, FileUploadService],
+  }), MessageModule, MulterModule.register(multerConfig), TransactionModule, DashboardModule,  ],
+  controllers: [AppController, FileController, TransactionController, DashboardController, ],
+  providers: [AppService, FileUploadService, TransactionService, DashboardService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
